@@ -8,6 +8,7 @@ const AI_Interviewer = () => {
   const [userResponse, setUserResponse] = useState('Waiting for response...');
   const [recognition, setRecognition] = useState(null);
 
+  
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
