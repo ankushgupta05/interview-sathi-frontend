@@ -83,6 +83,31 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+
+  // const register = async (userData) => {
+  //   setLoading(true);
+  //   setError(undefined);
+  //   try {
+
+  //     // console.log('Ankush Gupta')
+  //     // console.log('userData : ',userData)
+  //     await axios.post(`${API}/users/signup/`, userData);
+  //     const response = toast.success('Registration successful! Please log in.');
+  //     console.log('response a: ',response)
+  //     navigate('/login');
+  //   } catch (error) {
+  //     console.error('Registration error:', error);
+  //     // console.error('Registration erroraaaaaaa:', error.response?.data);
+  //     setError('Registration failed. Please check your information.');
+  //     toast.error('Registration failed. Please check your information.');
+  //     throw error;
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+
+
   const register = async (userData) => {
     setLoading(true);
     setError(undefined);
@@ -92,13 +117,55 @@ export const AuthProvider = ({ children }) => {
       navigate('/login');
     } catch (error) {
       console.error('Registration error:', error);
-      setError('Registration failed. Please check your information.');
-      toast.error('Registration failed. Please check your information.');
+  
+      const errorResponse = error.response?.data;
+  
+      if (errorResponse) {
+        // Case 1: Show specific backend message like "User already exists"
+        if (errorResponse.message) {
+          toast.error(errorResponse.message);
+          setError(errorResponse.message);
+        }
+  
+        // Case 2: Handle field-specific errors (password, phone) one-by-one
+        if (errorResponse.errors) {
+          const passwordErrors = errorResponse.errors.password || [];
+          const phoneErrors = errorResponse.errors.phone || [];
+  
+          const errorsToShow = [];
+  
+          if (passwordErrors.length > 0) {
+            errorsToShow.push("Password must be 8-30 chars, include letters, numbers & special char.");
+          }
+  
+          if (phoneErrors.length > 0) {
+            errorsToShow.push("Phone number is invalid or too long.");
+          }
+  
+          errorsToShow.forEach((msg, index) => {
+            setTimeout(() => toast.error(msg), index * 1200);
+          });
+  
+          if (!errorResponse.message) {
+            setError(errorsToShow[0]);
+          }
+        }
+      } else {
+        // Case 3: Fallback generic error
+        toast.error('Registration failed. Please try again.');
+        setError('Registration failed. Please try again.');
+      }
+  
       throw error;
     } finally {
       setLoading(false);
     }
   };
+  
+  
+  
+
+  
 
   const logout = () => {
     setUser(null);

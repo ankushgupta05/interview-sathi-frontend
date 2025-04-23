@@ -7,11 +7,13 @@ const RegisterForm = () => {
     email: '',
     phone: '',
     password: '',
-    repassword: '',
+    confirm_password: '',
     first_name: '',
+    last_name: '',
     gender: 'm',
     college: '',
   });
+  console.log(formData)
   const [showPassword, setShowPassword] = useState(false);
   const { register, loading, error } = useAuth();
   const navigate = useNavigate();
@@ -23,12 +25,12 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (formData.password !== formData.repassword) {
+
+    if (formData.password !== formData.confirm_password) {
       alert("Passwords don't match");
       return;
     }
-    
+
     await register(formData);
     navigate('/login');
   };
@@ -44,31 +46,49 @@ const RegisterForm = () => {
           </Link>
         </p>
       </div>
-      
+
       {error && (
         <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm">
           {error}
         </div>
       )}
-      
+
       <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
         <div className="space-y-4">
-          <div>
-            <label htmlFor="first_name" className="block text-sm font-medium text-gray-700">
-              Full Name
-            </label>
-            <input
-              id="first_name"
-              name="first_name"
-              type="text"
-              required
-              value={formData.first_name}
-              onChange={handleChange}
-              className="sathi-input mt-1"
-              placeholder="Your Name"
-            />
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="first_name" className="block text-sm font-medium text-gray-700">
+                First Name
+              </label>
+              <input
+                id="first_name"
+                name="first_name"
+                type="text"
+                required
+                value={formData.first_name}
+                onChange={handleChange}
+                className="sathi-input mt-1"
+                placeholder="First Name"
+              />
+            </div>
+            <div>
+              <label htmlFor="last_name" className="block text-sm font-medium text-gray-700">
+                Last Name
+              </label>
+              <input
+                id="last_name"
+                name="last_name"
+                type="text"
+                required
+                value={formData.last_name || ''}
+                onChange={handleChange}
+                className="sathi-input mt-1"
+                placeholder="Last Name"
+              />
+            </div>
           </div>
-          
+
+
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email address
@@ -85,7 +105,7 @@ const RegisterForm = () => {
               placeholder="your-email@example.com"
             />
           </div>
-          
+
           <div>
             <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
               Phone Number
@@ -101,7 +121,7 @@ const RegisterForm = () => {
               placeholder="9876543210"
             />
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="gender" className="block text-sm font-medium text-gray-700">
@@ -120,7 +140,7 @@ const RegisterForm = () => {
                 <option value="o">Other</option>
               </select>
             </div>
-            
+
             <div>
               <label htmlFor="college" className="block text-sm font-medium text-gray-700">
                 College/University
@@ -137,7 +157,7 @@ const RegisterForm = () => {
               />
             </div>
           </div>
-          
+
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Password
@@ -171,17 +191,17 @@ const RegisterForm = () => {
               </button>
             </div>
           </div>
-          
+
           <div>
-            <label htmlFor="repassword" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="confirm_password" className="block text-sm font-medium text-gray-700">
               Confirm Password
             </label>
             <input
-              id="repassword"
-              name="repassword"
+              id="confirm_password"
+              name="confirm_password"
               type={showPassword ? 'text' : 'password'}
               required
-              value={formData.repassword}
+              value={formData.confirm_password}
               onChange={handleChange}
               className="sathi-input mt-1"
               placeholder="••••••••"
